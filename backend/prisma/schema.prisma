@@ -1,0 +1,18 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model SearchLog {
+  id          Int      @id @default(autoincrement())
+  origin      String   @db.VarChar(50)
+  destination String   @db.VarChar(50)
+  city        String   @db.VarChar(100) @default("")
+  createdAt   DateTime @default(now())
+
+  @@index([createdAt])
+}
