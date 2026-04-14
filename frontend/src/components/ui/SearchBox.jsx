@@ -1,7 +1,18 @@
 import { useApp } from '@/context/AppContext';
 import { useFlights } from '@/hooks/useFlights';
 import { logSearch } from '@/api/client';
+import { AIRPORTS } from '@/data/airports';
 import AirportAutocomplete from './AirportAutocomplete';
+
+/**
+ * Try to match airport from text like "São Paulo (GRU)" or just "GRU"
+ */
+function matchAirport(text) {
+  if (!text) return null;
+  const iataMatch = text.match(/\(([A-Z]{3})\)/);
+  const iata = iataMatch ? iataMatch[1] : text.trim().toUpperCase();
+  return AIRPORTS.find((a) => a.iata === iata) || null;
+}
 
 export default function SearchBox() {
   const {
@@ -12,7 +23,15 @@ export default function SearchBox() {
   const { loadCalendar } = useFlights();
 
   async function handleSearch() {
-    if (!destAirport || !originAirport || streaming) return;
+    // Fallback: resolve airports from text if user typed without clicking autocomplete
+    const resolvedOrigin = originAirport || matchAirport(origin);
+    const resolvedDest = destAirport || matchAirport(dest);
+
+    if (!resolvedDest || !resolvedOrigin || streaming) return;
+
+    // Ensure state is updated
+    if (!originAirport && resolvedOrigin) setOriginAirport(resolvedOrigin);
+    if (!destAirport && resolvedDest) setDestAirport(resolvedDest);
 
     // Auto-advance month if most days already past
     const now = new Date();
@@ -25,19 +44,19 @@ export default function SearchBox() {
     // GA4
     if (typeof window !== 'undefined' && window.gtag) {
       window.gtag('event', 'flight_search', {
-        origin: originAirport.iata,
-        destination: destAirport.iata,
+        origin: resolvedOrigin.iata,
+        destination: resolvedDest.iata,
       });
     }
 
     // Log (non-blocking)
-    logSearch(originAirport.iata, destAirport.iata);
+    logSearch(resolvedOrigin.iata, resolvedDest.iata);
 
     // Fast calendar load — direct API, no AI
     try {
-      await loadCalendar(originAirport.iata, destAirport.iata, y, m);
-    } catch (err) {
-      console.error('Search failed:', err);
+      await loadCalendar(resolvedOrigin.iata, resolvedDest.iata, y, m);
+    } catch {
+      // Error is handled by useFlights / AppContext state
     }
   }
 
@@ -45,7 +64,7 @@ export default function SearchBox() {
     if (e.key === 'Enter') handleSearch();
   }
 
-  const canSearch = originAirport && destAirport && !streaming;
+  const canSearch = !streaming && (destAirport || matchAirport(dest)) && (originAirport || matchAirport(origin));
 
   return (
     <div className="glass border border-glass-border rounded-2xl p-6 shadow-xl w-full max-w-2xl mx-auto">

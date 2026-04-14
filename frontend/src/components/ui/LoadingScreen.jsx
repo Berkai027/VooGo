@@ -1,50 +1,67 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
+
+const TOTAL_DURATION = 2500; // ms total
 
 export default function LoadingScreen({ onDone }) {
   const [count, setCount] = useState(0);
   const [hiding, setHiding] = useState(false);
+  const onDoneRef = useRef(onDone);
+  onDoneRef.current = onDone;
 
   useEffect(() => {
-    if (count >= 100) {
-      setTimeout(() => {
-        setHiding(true);
-        setTimeout(() => onDone?.(), 400);
-      }, 300);
+    // Respect reduced motion — skip loading screen
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      onDoneRef.current?.();
       return;
     }
-    const speed = count < 60 ? 25 : count < 85 ? 40 : 60;
-    const timer = setTimeout(() => setCount(c => Math.min(c + 1, 100)), speed);
-    return () => clearTimeout(timer);
-  }, [count, onDone]);
+
+    const startTime = performance.now();
+    let rafId;
+
+    function tick(now) {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / TOTAL_DURATION, 1);
+      // easeOutCubic
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const nextCount = Math.round(eased * 100);
+      setCount(nextCount);
+
+      if (progress < 1) {
+        rafId = requestAnimationFrame(tick);
+      } else {
+        setTimeout(() => {
+          setHiding(true);
+          setTimeout(() => onDoneRef.current?.(), 500);
+        }, 200);
+      }
+    }
+
+    rafId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafId);
+  }, []);
 
   return (
     <div
       className={[
-        'fixed inset-0 z-[100] bg-bg flex flex-col items-center justify-center transition-transform duration-400',
+        'fixed inset-0 z-[100] bg-bg flex flex-col items-center justify-center transition-transform duration-500',
         hiding ? '-translate-y-full' : 'translate-y-0',
       ].join(' ')}
+      role="status"
+      aria-live="polite"
+      aria-label="Carregando VooGo"
     >
-      {/* Floating airplane */}
-      <div className="animate-float text-6xl mb-8 select-none">✈️</div>
-
-      {/* Brand */}
+      <div className="animate-float text-6xl mb-8 select-none" aria-hidden="true">✈️</div>
       <h1 className="text-3xl font-brico font-bold bg-gradient-to-r from-blue to-s1 bg-clip-text text-transparent mb-2">
         VooGo
       </h1>
-
-      {/* Subtitle */}
       <p className="text-muted text-sm mb-8">Preparando decolagem...</p>
-
-      {/* Progress bar */}
       <div className="w-64 h-1.5 bg-glass rounded-full overflow-hidden border border-glass-border">
         <div
-          className="h-full bg-gradient-to-r from-blue to-s1 rounded-full transition-all duration-100"
-          style={{ width: `${count}%` }}
+          className="h-full bg-gradient-to-r from-blue to-s1 rounded-full"
+          style={{ width: `${count}%`, transition: 'width 60ms linear' }}
         />
       </div>
-
-      {/* Counter */}
-      <p className="mt-3 text-xs text-muted2 font-mono">{count}%</p>
+      <p className="mt-3 text-xs text-muted2 font-mono tabular-nums">{count}%</p>
     </div>
   );
 }

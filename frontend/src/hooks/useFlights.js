@@ -21,23 +21,15 @@ export function useFlights() {
       setCalData(data.days || []);
       setSmartData(data);
       return data;
-    } catch (err) {
-      console.error('Calendar error:', err.message);
-      throw err;
     } finally {
       setStreaming(false);
     }
   }, [setCalData, setSmartData, setStreaming]);
 
   const loadFlightsDay = useCallback(async (originSkyId, destSkyId, originEntityId, destEntityId, date) => {
-    try {
-      const flights = await fetchFlightsDay(originSkyId, destSkyId, originEntityId, destEntityId, date);
-      setFlights(flights);
-      return flights;
-    } catch (err) {
-      console.error('Flights error:', err.message);
-      throw err;
-    }
+    const flights = await fetchFlightsDay(originSkyId, destSkyId, originEntityId, destEntityId, date);
+    setFlights(flights);
+    return flights;
   }, [setFlights]);
 
   return { loadCalendar, loadFlightsDay };

@@ -31,9 +31,10 @@ function AppContent() {
 
   return (
     <div className="min-h-screen bg-bg text-text">
+      <a href="#main" className="skip-link">Pular para o conteúdo</a>
       <Nav />
 
-      <main>
+      <main id="main">
         {activeTab === 'comercial' && <CommercialPage />}
         {activeTab === 'particular' && <PrivatePage />}
         {activeTab === 'sobre' && <AboutPage />}
