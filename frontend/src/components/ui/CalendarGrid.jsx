@@ -1,6 +1,4 @@
 import { useApp } from '@/context/AppContext';
-import { useFlights } from '@/hooks/useFlights';
-import { fetchAirports } from '@/api/client';
 import { formatPrice, tierLabel, calcTier, calcQuartiles } from '@/utils/format';
 
 const WEEKDAYS = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
@@ -22,7 +20,6 @@ const TIER_TEXT = {
 
 export default function CalendarGrid() {
   const { calData, year, month, selectedDay, setSelectedDay, originAirport, destAirport, streaming } = useApp();
-  const { loadFlightsDay } = useFlights();
 
   const now = new Date();
   const firstDay = new Date(year, month - 1, 1).getDay();
@@ -34,38 +31,13 @@ export default function CalendarGrid() {
   const dataByDay = {};
   calData.forEach((d) => { dataByDay[d.day] = d; });
 
-  async function handleDayClick(day) {
+  function handleDayClick(day) {
     if (streaming || !originAirport || !destAirport) return;
     const entry = dataByDay[day];
     if (!entry) return;
-
     setSelectedDay(day);
-    const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-
-    try {
-      // Need entityIds for searchFlights — fetch from API if not cached
-      let originEntityId = originAirport.entityId;
-      let destEntityId = destAirport.entityId;
-
-      if (!originEntityId) {
-        const res = await fetchAirports(originAirport.iata);
-        originEntityId = res[0]?.entityId || '';
-      }
-      if (!destEntityId) {
-        const res = await fetchAirports(destAirport.iata);
-        destEntityId = res[0]?.entityId || '';
-      }
-
-      await loadFlightsDay(
-        originAirport.iata,
-        destAirport.iata,
-        originEntityId,
-        destEntityId,
-        dateStr
-      );
-    } catch (err) {
-      console.error('Day click error:', err);
-    }
+    // Detail panel reads directly from calData — no API call needed
+    // (Sky Scrapper searchFlights endpoint is unreliable; we use Google Flights deep link instead)
   }
 
   function isPast(day) {
