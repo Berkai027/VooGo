@@ -51,6 +51,38 @@ export async function fetchConfig() {
 }
 
 /**
+ * Fetch price calendar directly (fast, no AI)
+ */
+export async function fetchCalendar(originSkyId, destSkyId, year, month) {
+  const qs = new URLSearchParams({ originSkyId, destSkyId, year, month });
+  const res = await fetch(`/api/v1/flights/calendar?${qs}`);
+  const json = await res.json();
+  if (!json.success) throw new Error(json.message || 'Erro ao buscar calendário');
+  return json.data;
+}
+
+/**
+ * Fetch flights for a specific day (fast, no AI)
+ */
+export async function fetchFlightsDay(originSkyId, destSkyId, originEntityId, destEntityId, date) {
+  const qs = new URLSearchParams({ originSkyId, destSkyId, originEntityId, destEntityId, date });
+  const res = await fetch(`/api/v1/flights/day?${qs}`);
+  const json = await res.json();
+  if (!json.success) throw new Error(json.message || 'Erro ao buscar voos');
+  return json.data;
+}
+
+/**
+ * Search airports (fast, no AI)
+ */
+export async function fetchAirports(query) {
+  const res = await fetch(`/api/v1/flights/airports?q=${encodeURIComponent(query)}`);
+  const json = await res.json();
+  if (!json.success) return [];
+  return json.data;
+}
+
+/**
  * Log a search
  */
 export async function logSearch(origin, destination) {

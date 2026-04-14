@@ -1,5 +1,6 @@
 import { useApp } from '@/context/AppContext';
-import { useAgent } from '@/hooks/useAgent';
+import { useFlights } from '@/hooks/useFlights';
+import { fetchAirports } from '@/api/client';
 import { formatPrice, tierLabel, calcTier, calcQuartiles } from '@/utils/format';
 
 const WEEKDAYS = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
@@ -20,8 +21,8 @@ const TIER_TEXT = {
 };
 
 export default function CalendarGrid() {
-  const { calData, year, month, selectedDay, setSelectedDay, origin, dest } = useApp();
-  const { sendMessage, streaming } = useAgent();
+  const { calData, year, month, selectedDay, setSelectedDay, originAirport, destAirport, streaming } = useApp();
+  const { loadFlightsDay } = useFlights();
 
   const now = new Date();
   const firstDay = new Date(year, month - 1, 1).getDay();
@@ -33,17 +34,38 @@ export default function CalendarGrid() {
   const dataByDay = {};
   calData.forEach((d) => { dataByDay[d.day] = d; });
 
-  function handleDayClick(day) {
-    if (streaming) return;
+  async function handleDayClick(day) {
+    if (streaming || !originAirport || !destAirport) return;
     const entry = dataByDay[day];
     if (!entry) return;
 
     setSelectedDay(day);
-    const searchContext = { origin, destination: dest, year, month, day };
-    sendMessage(
-      `Ver voos disponíveis para o dia ${day}/${month}/${year}`,
-      searchContext,
-    );
+    const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+
+    try {
+      // Need entityIds for searchFlights — fetch from API if not cached
+      let originEntityId = originAirport.entityId;
+      let destEntityId = destAirport.entityId;
+
+      if (!originEntityId) {
+        const res = await fetchAirports(originAirport.iata);
+        originEntityId = res[0]?.entityId || '';
+      }
+      if (!destEntityId) {
+        const res = await fetchAirports(destAirport.iata);
+        destEntityId = res[0]?.entityId || '';
+      }
+
+      await loadFlightsDay(
+        originAirport.iata,
+        destAirport.iata,
+        originEntityId,
+        destEntityId,
+        dateStr
+      );
+    } catch (err) {
+      console.error('Day click error:', err);
+    }
   }
 
   function isPast(day) {

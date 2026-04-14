@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ override: true });
 const { env } = require('./config/env');
 const app = require('./app');
 const logger = require('./config/logger');

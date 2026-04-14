@@ -45,6 +45,7 @@ app.get('/api/health', (req, res) => {
 });
 
 // ── ROUTES ──
+app.use('/api/v1/flights', require('./routes/flights.routes'));
 app.use('/api/v1/agent', require('./routes/agent.routes'));
 app.use('/api/v1/config', require('./routes/config.routes'));
 app.use('/api/v1/search-log', require('./routes/searchLog.routes'));

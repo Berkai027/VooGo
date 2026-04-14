@@ -6,6 +6,8 @@ export function AppProvider({ children }) {
   const now = new Date();
   const [origin, setOrigin] = useState('São Paulo (GRU)');
   const [dest, setDest] = useState('');
+  const [originAirport, setOriginAirport] = useState({ iata: 'GRU', city: 'São Paulo' });
+  const [destAirport, setDestAirport] = useState(null);
   const [year, setYear] = useState(now.getFullYear());
   const [month, setMonth] = useState(now.getMonth() + 1);
   const [calData, setCalData] = useState([]);
@@ -39,11 +41,11 @@ export function AppProvider({ children }) {
 
   return (
     <AppContext.Provider value={{
-      origin, dest, year, month, calData, smartData, selectedDay,
+      origin, dest, originAirport, destAirport, year, month, calData, smartData, selectedDay,
       messages, streaming, flights, activeTab,
-      setOrigin, setDest, setYear, setMonth, setCalData, setSmartData,
-      setSelectedDay, addMessage, updateLastAssistant, setStreaming, setFlights, setActiveTab,
-      getAgentMessages,
+      setOrigin, setDest, setOriginAirport, setDestAirport, setYear, setMonth,
+      setCalData, setSmartData, setSelectedDay, addMessage, updateLastAssistant,
+      setStreaming, setFlights, setActiveTab, getAgentMessages,
     }}>
       {children}
     </AppContext.Provider>

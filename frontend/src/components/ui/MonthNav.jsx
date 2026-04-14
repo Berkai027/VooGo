@@ -1,13 +1,13 @@
 import { useApp } from '@/context/AppContext';
-import { useAgent } from '@/hooks/useAgent';
+import { useFlights } from '@/hooks/useFlights';
 import { MONTHS_PT } from '@/data/constants';
 
 export default function MonthNav() {
-  const { year, month, setYear, setMonth, origin, dest } = useApp();
-  const { sendMessage, streaming } = useAgent();
+  const { year, month, setYear, setMonth, originAirport, destAirport, streaming } = useApp();
+  const { loadCalendar } = useFlights();
 
-  function navigate(dir) {
-    if (streaming) return;
+  async function navigate(dir) {
+    if (streaming || !originAirport || !destAirport) return;
     let newMonth = month + dir;
     let newYear = year;
     if (newMonth < 1) { newMonth = 12; newYear -= 1; }
@@ -15,11 +15,11 @@ export default function MonthNav() {
     setMonth(newMonth);
     setYear(newYear);
 
-    const searchContext = { origin, destination: dest, year: newYear, month: newMonth };
-    sendMessage(
-      `Mostrar preços para ${MONTHS_PT[newMonth]} de ${newYear}`,
-      searchContext,
-    );
+    try {
+      await loadCalendar(originAirport.iata, destAirport.iata, newYear, newMonth);
+    } catch (err) {
+      console.error('Month nav error:', err);
+    }
   }
 
   return (
