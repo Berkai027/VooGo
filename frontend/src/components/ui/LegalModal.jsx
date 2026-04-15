@@ -8,7 +8,7 @@ const CONTENT = {
 Ao usar a plataforma VooGo, você concorda com estes Termos de Uso. Se não concordar, não utilize o serviço.
 
 **2. Descrição do Serviço**
-A VooGo é uma plataforma de busca e comparação de passagens aéreas, tanto em voos comerciais quanto em voos particulares/charter. Atuamos como intermediária, facilitando o contato entre passageiros e companhias aéreas ou operadores de aeronaves.
+A VooGo é uma plataforma de busca e comparação de passagens aéreas, tanto em voos comerciais quanto em voos privados/charter. Atuamos como intermediária, facilitando o contato entre passageiros e companhias aéreas ou operadores de aeronaves.
 
 **3. Uso do Serviço**
 Você concorda em usar a plataforma apenas para fins legais e pessoais. É proibido usar a VooGo para qualquer atividade ilícita, incluindo fraude ou violação de direitos de terceiros.
@@ -33,16 +33,16 @@ Para dúvidas: contato@voogo.io
     title: 'Política de Privacidade',
     body: `
 **1. Dados Coletados**
-Coletamos dados de navegação (como origem, destino, datas de pesquisa) e, quando fornecidos, dados de contato para voos particulares (nome, telefone).
+Coletamos dados de navegação (como origem, destino, datas de pesquisa) e, quando fornecidos, dados de contato para voos privados (nome, telefone).
 
 **2. Uso dos Dados**
-Os dados são usados para melhorar a experiência de busca, personalizar sugestões e, no caso de voos particulares, transmitir sua solicitação à equipe comercial.
+Os dados são usados para melhorar a experiência de busca, personalizar sugestões e, no caso de voos privados, transmitir sua solicitação à equipe comercial.
 
 **3. Cookies**
 Utilizamos cookies essenciais para o funcionamento do site e cookies analíticos (Google Analytics) para entender o uso da plataforma. Você pode recusar cookies não essenciais.
 
 **4. Compartilhamento**
-Não vendemos seus dados. Podemos compartilhar informações com parceiros operacionais exclusivamente para concluir solicitações de voos particulares.
+Não vendemos seus dados. Podemos compartilhar informações com parceiros operacionais exclusivamente para concluir solicitações de voos privados.
 
 **5. Retenção**
 Dados de navegação anônimos são retidos por até 24 meses. Dados de contato são retidos enquanto necessário para a prestação do serviço.

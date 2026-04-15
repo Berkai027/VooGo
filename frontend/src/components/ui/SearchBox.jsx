@@ -114,6 +114,13 @@ export default function SearchBox() {
             'Buscar voos →'
           )}
         </button>
+
+        <div className="flex items-center justify-center gap-2 pt-1">
+          <span className="inline-flex items-center gap-1.5 text-[11px] text-blue font-semibold bg-blue/10 border border-blue/25 rounded-full px-3 py-1">
+            <span aria-hidden="true">✈</span>
+            Mostramos apenas <span className="underline decoration-blue/40 underline-offset-2">preços de ida</span>
+          </span>
+        </div>
       </div>
     </div>
   );

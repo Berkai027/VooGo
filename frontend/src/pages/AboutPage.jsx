@@ -6,7 +6,7 @@ const CARDS = [
   },
   {
     icon: '🚁',
-    title: 'Voos Particulares',
+    title: 'Voos Privados',
     desc: 'Conectamos você a operadores de jatos executivos, helicópteros e aeronaves charter para viagens sob medida.',
   },
   {
@@ -23,7 +23,7 @@ const CARDS = [
 
 const ABOUT_PARAS = [
   'A VooGo nasceu da crença de que viajar deveria ser simples, transparente e acessível. Fundada em 2025, somos uma plataforma brasileira que combina tecnologia de ponta com inteligência artificial para oferecer a melhor experiência de busca de voos do mercado.',
-  'Para voos comerciais, nossa IA analisa dados de preços em tempo real e exibe um calendário visual que mostra quando é mais barato voar — sem complicação. Para voos particulares, atuamos como intermediária entre clientes e operadores certificados, garantindo conforto, flexibilidade e segurança.',
+  'Para voos comerciais, nossa IA analisa dados de preços em tempo real e exibe um calendário visual que mostra quando é mais barato voar — sem complicação. Para voos privados, atuamos como intermediária entre clientes e operadores certificados, garantindo conforto, flexibilidade e segurança.',
   'Acreditamos que a democratização do transporte aéreo passa por informação clara e ferramentas inteligentes. É com esse propósito que trabalhamos todos os dias para fazer a VooGo a escolha certa para quem quer voar bem.',
 ];
 
