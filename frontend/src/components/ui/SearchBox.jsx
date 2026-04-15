@@ -18,7 +18,7 @@ export default function SearchBox() {
   const {
     origin, dest, setOrigin, setDest,
     originAirport, destAirport, setOriginAirport, setDestAirport,
-    year, month, setYear, setMonth, streaming,
+    year, month, setYear, setMonth, loading,
   } = useApp();
   const { loadCalendar } = useFlights();
 
@@ -27,7 +27,7 @@ export default function SearchBox() {
     const resolvedOrigin = originAirport || matchAirport(origin);
     const resolvedDest = destAirport || matchAirport(dest);
 
-    if (!resolvedDest || !resolvedOrigin || streaming) return;
+    if (!resolvedDest || !resolvedOrigin || loading) return;
 
     // Ensure state is updated
     if (!originAirport && resolvedOrigin) setOriginAirport(resolvedOrigin);
@@ -64,7 +64,7 @@ export default function SearchBox() {
     if (e.key === 'Enter') handleSearch();
   }
 
-  const canSearch = !streaming && (destAirport || matchAirport(dest)) && (originAirport || matchAirport(origin));
+  const canSearch = !loading && (destAirport || matchAirport(dest)) && (originAirport || matchAirport(origin));
 
   return (
     <div className="glass border border-glass-border rounded-2xl p-6 shadow-xl w-full max-w-2xl mx-auto">
@@ -105,7 +105,7 @@ export default function SearchBox() {
               : 'bg-glass text-muted2 cursor-not-allowed border border-glass-border',
           ].join(' ')}
         >
-          {streaming ? (
+          {loading ? (
             <>
               <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
               Buscando...

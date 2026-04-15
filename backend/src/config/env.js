@@ -6,8 +6,6 @@ const envSchema = z.object({
   FRONTEND_URL: z.string().url().default('http://localhost:5174'),
   CORS_ORIGINS: z.string().default('http://localhost:5174'),
   DATABASE_URL: z.string().min(1, 'DATABASE_URL é obrigatória'),
-  ANTHROPIC_API_KEY: z.string().min(1, 'ANTHROPIC_API_KEY é obrigatória'),
-  AGENT_MODEL: z.string().default('claude-sonnet-4-20250514'),
   RAPIDAPI_KEY: z.string().min(1, 'RAPIDAPI_KEY é obrigatória'),
   RAPIDAPI_HOST: z.string().default('sky-scrapper.p.rapidapi.com'),
   WHATSAPP_NUMBER: z.string().default('5599999999999'),

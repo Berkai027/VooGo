@@ -5,7 +5,6 @@ const logger = require('./config/logger');
 
 const server = app.listen(env.PORT, () => {
   logger.info(`🚀 VooGo API running on port ${env.PORT} (${env.NODE_ENV})`);
-  logger.info(`Agent: ${env.AGENT_MODEL}`);
   logger.info(`Flights API: ${env.RAPIDAPI_HOST}`);
 });
 

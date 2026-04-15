@@ -3,11 +3,11 @@ import { useFlights } from '@/hooks/useFlights';
 import { MONTHS_PT } from '@/data/constants';
 
 export default function MonthNav() {
-  const { year, month, setYear, setMonth, originAirport, destAirport, streaming } = useApp();
+  const { year, month, setYear, setMonth, originAirport, destAirport, loading } = useApp();
   const { loadCalendar } = useFlights();
 
   async function navigate(dir) {
-    if (streaming || !originAirport || !destAirport) return;
+    if (loading || !originAirport || !destAirport) return;
     let newMonth = month + dir;
     let newYear = year;
     if (newMonth < 1) { newMonth = 12; newYear -= 1; }
@@ -17,8 +17,8 @@ export default function MonthNav() {
 
     try {
       await loadCalendar(originAirport.iata, destAirport.iata, newYear, newMonth);
-    } catch (err) {
-      console.error('Month nav error:', err);
+    } catch {
+      // Error surfaced via UI state
     }
   }
 
@@ -26,7 +26,7 @@ export default function MonthNav() {
     <div className="flex items-center justify-center gap-4">
       <button
         onClick={() => navigate(-1)}
-        disabled={streaming}
+        disabled={loading}
         className="w-9 h-9 rounded-full glass border border-glass-border flex items-center justify-center text-muted hover:text-text hover:border-muted disabled:opacity-40 transition-all"
       >
         ←
@@ -38,7 +38,7 @@ export default function MonthNav() {
 
       <button
         onClick={() => navigate(1)}
-        disabled={streaming}
+        disabled={loading}
         className="w-9 h-9 rounded-full glass border border-glass-border flex items-center justify-center text-muted hover:text-text hover:border-muted disabled:opacity-40 transition-all"
       >
         →

@@ -11,20 +11,20 @@ export function useFlights() {
     setCalData,
     setSmartData,
     setFlights,
-    setStreaming,
+    setLoading,
   } = useApp();
 
   const loadCalendar = useCallback(async (originSkyId, destSkyId, year, month) => {
-    setStreaming(true);
+    setLoading(true);
     try {
       const data = await fetchCalendar(originSkyId, destSkyId, year, month);
       setCalData(data.days || []);
       setSmartData(data);
       return data;
     } finally {
-      setStreaming(false);
+      setLoading(false);
     }
-  }, [setCalData, setSmartData, setStreaming]);
+  }, [setCalData, setSmartData, setLoading]);
 
   const loadFlightsDay = useCallback(async (originSkyId, destSkyId, originEntityId, destEntityId, date) => {
     const flights = await fetchFlightsDay(originSkyId, destSkyId, originEntityId, destEntityId, date);

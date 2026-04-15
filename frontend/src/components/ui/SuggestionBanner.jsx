@@ -1,28 +1,21 @@
 import { useApp } from '@/context/AppContext';
-import { useAgent } from '@/hooks/useAgent';
 import { formatPrice } from '@/utils/format';
 
 export default function SuggestionBanner() {
-  const { smartData, month, year, origin, dest, setSelectedDay } = useApp();
-  const { sendMessage, streaming } = useAgent();
+  const { smartData, setSelectedDay, loading } = useApp();
 
   if (!smartData?.best_day) return null;
 
   const { best_day, best_airline, economy_pct, best_price } = smartData;
 
   function handleView() {
-    if (streaming) return;
+    if (loading) return;
     setSelectedDay(best_day);
-    const searchContext = { origin, destination: dest, year, month, day: best_day };
-    sendMessage(
-      `Mostrar voos do dia ${best_day}/${month}/${year}`,
-      searchContext,
-    );
   }
 
   return (
     <div className="w-full glass border border-blue/30 bg-blue/5 rounded-2xl px-5 py-4 flex items-center gap-4 animate-fadeInUp">
-      <span className="text-2xl shrink-0">💡</span>
+      <span className="text-2xl shrink-0" aria-hidden="true">💡</span>
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium text-text">
           Melhor dia para voar:{' '}
@@ -44,10 +37,10 @@ export default function SuggestionBanner() {
       </div>
       <button
         onClick={handleView}
-        disabled={streaming}
+        disabled={loading}
         className="shrink-0 px-4 py-2 rounded-xl bg-blue text-white text-sm font-medium hover:bg-blue/90 disabled:opacity-50 transition-all"
       >
-        Ver voos →
+        Ver detalhes →
       </button>
     </div>
   );

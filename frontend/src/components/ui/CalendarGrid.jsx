@@ -19,7 +19,7 @@ const TIER_TEXT = {
 };
 
 export default function CalendarGrid() {
-  const { calData, year, month, selectedDay, setSelectedDay, originAirport, destAirport, streaming } = useApp();
+  const { calData, year, month, selectedDay, setSelectedDay, originAirport, destAirport, loading } = useApp();
 
   const now = new Date();
   const firstDay = new Date(year, month - 1, 1).getDay();
@@ -32,7 +32,7 @@ export default function CalendarGrid() {
   calData.forEach((d) => { dataByDay[d.day] = d; });
 
   function handleDayClick(day) {
-    if (streaming || !originAirport || !destAirport) return;
+    if (loading || !originAirport || !destAirport) return;
     const entry = dataByDay[day];
     if (!entry) return;
     setSelectedDay(day);

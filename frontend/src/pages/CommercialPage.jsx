@@ -1,7 +1,6 @@
 import { useApp } from '@/context/AppContext';
 import ParticleCanvas from '@/components/ui/ParticleCanvas';
 import SearchBox from '@/components/ui/SearchBox';
-import ChatSection from '@/components/ui/ChatSection';
 import SuggestionBanner from '@/components/ui/SuggestionBanner';
 import SummaryCards from '@/components/ui/SummaryCards';
 import Legend from '@/components/ui/Legend';
@@ -10,7 +9,7 @@ import CalendarGrid from '@/components/ui/CalendarGrid';
 import DetailPanel from '@/components/ui/DetailPanel';
 
 export default function CommercialPage() {
-  const { calData, streaming } = useApp();
+  const { calData, loading } = useApp();
   const hasResults = calData.length > 0;
 
   return (
@@ -55,13 +54,8 @@ export default function CommercialPage() {
         </div>
       </section>
 
-      {/* Chat section */}
-      <div className="max-w-2xl mx-auto px-4">
-        <ChatSection />
-      </div>
-
-      {/* Loading bar when streaming */}
-      {streaming && (
+      {/* Loading bar when loading */}
+      {loading && (
         <div className="max-w-2xl mx-auto px-4 mt-2">
           <div className="h-0.5 bg-glass rounded-full overflow-hidden">
             <div className="h-full bg-gradient-to-r from-blue to-s1 animate-loadbar rounded-full" />
