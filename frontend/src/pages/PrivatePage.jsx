@@ -20,6 +20,7 @@ export default function PrivatePage() {
     destino: '', saida: '', dataIda: '', dataVolta: '',
     passageiros: 1, aeronave: 'jato_leve', observacoes: '',
   });
+  const [tripType, setTripType] = useState('roundtrip'); // 'roundtrip' | 'oneway'
   const [whatsapp, setWhatsapp] = useState('5555997044152');
 
   useEffect(() => {
@@ -34,12 +35,15 @@ export default function PrivatePage() {
 
   function buildMessage() {
     const aircraft = AIRCRAFT_OPTIONS.find((a) => a.value === form.aeronave)?.label || form.aeronave;
+    const tripLine = tripType === 'oneway'
+      ? `🎫 *Tipo:* Apenas ida\n📅 *Data:* ${form.dataIda}\n`
+      : `🎫 *Tipo:* Ida e volta\n📅 *Data ida:* ${form.dataIda}\n📅 *Data volta:* ${form.dataVolta || 'A definir'}\n`;
+
     return encodeURIComponent(
       `Olá! Gostaria de solicitar um voo privado pela VooGo 🛩️\n\n` +
-      `✈ *Destino:* ${form.destino}\n` +
       `🛫 *Saída:* ${form.saida}\n` +
-      `📅 *Data ida:* ${form.dataIda}\n` +
-      `📅 *Data volta:* ${form.dataVolta || 'Não informada'}\n` +
+      `✈ *Destino:* ${form.destino}\n` +
+      tripLine +
       `👥 *Passageiros:* ${form.passageiros}\n` +
       `🛩 *Aeronave:* ${aircraft}\n` +
       `📝 *Observações:* ${form.observacoes || 'Nenhuma'}\n\n` +
@@ -100,6 +104,37 @@ export default function PrivatePage() {
             <h2 className="font-brico font-bold text-xl text-text">Solicitar voo privado</h2>
           </div>
 
+          {/* Trip type toggle */}
+          <div className="inline-flex items-center gap-1 p-1 rounded-xl bg-glass border border-glass-border self-start">
+            <button
+              type="button"
+              onClick={() => setTripType('roundtrip')}
+              className={[
+                'px-4 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200',
+                tripType === 'roundtrip'
+                  ? 'bg-green text-bg shadow-sm'
+                  : 'text-muted hover:text-text',
+              ].join(' ')}
+            >
+              Ida e volta
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setTripType('oneway');
+                setForm((f) => ({ ...f, dataVolta: '' }));
+              }}
+              className={[
+                'px-4 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200',
+                tripType === 'oneway'
+                  ? 'bg-green text-bg shadow-sm'
+                  : 'text-muted hover:text-text',
+              ].join(' ')}
+            >
+              Apenas ida
+            </button>
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className={labelClass}>Saída</label>
@@ -109,14 +144,18 @@ export default function PrivatePage() {
               <label className={labelClass}>Destino</label>
               <input className={inputClass} placeholder="Ex: Angra dos Reis (AIA)" value={form.destino} onChange={handleChange('destino')} />
             </div>
-            <div>
-              <label className={labelClass}>Data de ida</label>
+            <div className={tripType === 'oneway' ? 'sm:col-span-2' : ''}>
+              <label className={labelClass}>
+                {tripType === 'oneway' ? 'Data do voo' : 'Data de ida'}
+              </label>
               <input type="date" className={inputClass} value={form.dataIda} onChange={handleChange('dataIda')} />
             </div>
-            <div>
-              <label className={labelClass}>Data de volta</label>
-              <input type="date" className={inputClass} value={form.dataVolta} onChange={handleChange('dataVolta')} />
-            </div>
+            {tripType === 'roundtrip' && (
+              <div>
+                <label className={labelClass}>Data de volta</label>
+                <input type="date" className={inputClass} value={form.dataVolta} onChange={handleChange('dataVolta')} />
+              </div>
+            )}
             <div className="sm:col-span-2">
               <label className={labelClass}>Passageiros</label>
               <div className="flex items-center gap-3 bg-glass border border-glass-border rounded-xl px-3 py-2 focus-within:border-green/60 focus-within:ring-2 focus-within:ring-green/20 transition-all">
