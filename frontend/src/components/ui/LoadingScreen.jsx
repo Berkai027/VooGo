@@ -1,56 +1,70 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-const TOTAL_DURATION = 2500; // ms total
+const DURATION = 1800; // ms total — short and sweet
 
 export default function LoadingScreen({ onDone }) {
   const [count, setCount] = useState(0);
   const [hiding, setHiding] = useState(false);
-  const onDoneRef = useRef(onDone);
-  onDoneRef.current = onDone;
 
   useEffect(() => {
-    // Respect reduced motion — skip loading screen
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      onDoneRef.current?.();
+    // Respect reduced motion — skip instantly
+    if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      onDone?.();
       return;
     }
 
     const startTime = performance.now();
     let rafId;
+    let finished = false;
 
     function tick(now) {
+      if (finished) return;
       const elapsed = now - startTime;
-      const progress = Math.min(elapsed / TOTAL_DURATION, 1);
-      // easeOutCubic
+      const progress = Math.min(elapsed / DURATION, 1);
       const eased = 1 - Math.pow(1 - progress, 3);
-      const nextCount = Math.round(eased * 100);
-      setCount(nextCount);
-
+      setCount(Math.round(eased * 100));
       if (progress < 1) {
         rafId = requestAnimationFrame(tick);
       } else {
-        setTimeout(() => {
-          setHiding(true);
-          setTimeout(() => onDoneRef.current?.(), 500);
-        }, 200);
+        finished = true;
+        setCount(100);
+        setHiding(true);
+        // Fire onDone after the slide-up finishes
+        setTimeout(() => onDone?.(), 450);
       }
     }
 
     rafId = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(rafId);
+
+    // Safety net — force exit after 3s max, no matter what
+    const safety = setTimeout(() => {
+      if (!finished) {
+        finished = true;
+        cancelAnimationFrame(rafId);
+        setCount(100);
+        setHiding(true);
+        setTimeout(() => onDone?.(), 300);
+      }
+    }, 3000);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      clearTimeout(safety);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <div
       className={[
-        'fixed inset-0 z-[100] bg-bg flex flex-col items-center justify-center transition-transform duration-500',
+        'fixed inset-0 z-[100] bg-bg flex flex-col items-center justify-center transition-transform duration-500 ease-out',
         hiding ? '-translate-y-full' : 'translate-y-0',
       ].join(' ')}
       role="status"
       aria-live="polite"
       aria-label="Carregando VooGo"
     >
-      <div className="animate-float text-6xl mb-8 select-none" aria-hidden="true">✈️</div>
+      <div className="text-6xl mb-8 select-none animate-float" aria-hidden="true">✈️</div>
       <h1 className="text-3xl font-brico font-bold bg-gradient-to-r from-blue to-s1 bg-clip-text text-transparent mb-2">
         VooGo
       </h1>
@@ -58,7 +72,7 @@ export default function LoadingScreen({ onDone }) {
       <div className="w-64 h-1.5 bg-glass rounded-full overflow-hidden border border-glass-border">
         <div
           className="h-full bg-gradient-to-r from-blue to-s1 rounded-full"
-          style={{ width: `${count}%`, transition: 'width 60ms linear' }}
+          style={{ width: `${count}%`, transition: 'width 50ms linear' }}
         />
       </div>
       <p className="mt-3 text-xs text-muted2 font-mono tabular-nums">{count}%</p>
