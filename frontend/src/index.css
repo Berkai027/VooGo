@@ -49,6 +49,28 @@
     transition: top 0.2s;
   }
   .skip-link:focus { top: 0; }
+
+  /* Remove native number input spinners (Chrome, Safari, Edge) */
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+
+  /* Custom date input icon color (calendar emoji from browser) */
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.6) brightness(1.2);
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+  }
+  input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+  }
 }
 
 /* Reduced motion — respect user preferences */

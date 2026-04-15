@@ -119,15 +119,42 @@ export default function PrivatePage() {
             </div>
             <div className="sm:col-span-2">
               <label className={labelClass}>Passageiros</label>
-              <input
-                type="number"
-                min={1}
-                max={50}
-                className={inputClass}
-                value={form.passageiros}
-                onChange={handleChange('passageiros')}
-                placeholder="Quantas pessoas vão viajar?"
-              />
+              <div className="flex items-center gap-3 bg-glass border border-glass-border rounded-xl px-3 py-2 focus-within:border-green/60 focus-within:ring-2 focus-within:ring-green/20 transition-all">
+                {/* Decrement */}
+                <button
+                  type="button"
+                  onClick={() => setForm((f) => ({ ...f, passageiros: Math.max(1, (parseInt(f.passageiros) || 1) - 1) }))}
+                  disabled={parseInt(form.passageiros) <= 1}
+                  className="shrink-0 w-10 h-10 rounded-lg border border-glass-border bg-white/[0.03] hover:bg-green/10 hover:border-green/40 hover:text-green text-muted text-lg font-bold transition-all flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-white/[0.03] disabled:hover:border-glass-border disabled:hover:text-muted active:scale-95"
+                  aria-label="Menos um passageiro"
+                >
+                  −
+                </button>
+
+                {/* Value display */}
+                <div className="flex-1 flex items-center justify-center gap-2">
+                  <span className="text-text font-brico font-bold text-2xl tabular-nums">
+                    {form.passageiros || 1}
+                  </span>
+                  <span className="text-muted2 text-sm">
+                    {parseInt(form.passageiros) === 1 ? 'passageiro' : 'passageiros'}
+                  </span>
+                </div>
+
+                {/* Increment */}
+                <button
+                  type="button"
+                  onClick={() => setForm((f) => ({ ...f, passageiros: Math.min(50, (parseInt(f.passageiros) || 1) + 1) }))}
+                  disabled={parseInt(form.passageiros) >= 50}
+                  className="shrink-0 w-10 h-10 rounded-lg border border-glass-border bg-white/[0.03] hover:bg-green/10 hover:border-green/40 hover:text-green text-muted text-lg font-bold transition-all flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed active:scale-95"
+                  aria-label="Mais um passageiro"
+                >
+                  +
+                </button>
+              </div>
+              <p className="text-[11px] text-muted2 mt-1.5 ml-1">
+                Mínimo 1 · máximo 50 passageiros
+              </p>
             </div>
           </div>
 
