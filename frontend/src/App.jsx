@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AppProvider } from '@/context/AppContext';
 import { useApp } from '@/context/AppContext';
 
@@ -16,6 +16,16 @@ function AppContent() {
   const { activeTab } = useApp();
   const [loading, setLoading] = useState(true);
   const [legalType, setLegalType] = useState(null);
+
+  // Apply green theme class to body when on private flights tab
+  useEffect(() => {
+    if (activeTab === 'particular') {
+      document.body.classList.add('theme-green');
+    } else {
+      document.body.classList.remove('theme-green');
+    }
+    return () => document.body.classList.remove('theme-green');
+  }, [activeTab]);
 
   function handleOpenLegal(type) {
     if (type === 'sobre') {

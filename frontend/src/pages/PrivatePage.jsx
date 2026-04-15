@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { fetchConfig } from '@/api/client';
+import DateField from '@/components/ui/DateField';
 
 const AIRCRAFT_OPTIONS = [
   { value: 'turboelice', label: 'Turboélice', icon: '🛩️', desc: 'Até 9 pax · curto alcance' },
@@ -148,12 +149,19 @@ export default function PrivatePage() {
               <label className={labelClass}>
                 {tripType === 'oneway' ? 'Data do voo' : 'Data de ida'}
               </label>
-              <input type="date" className={inputClass} value={form.dataIda} onChange={handleChange('dataIda')} />
+              <DateField
+                value={form.dataIda}
+                onChange={(v) => setForm((f) => ({ ...f, dataIda: v }))}
+              />
             </div>
             {tripType === 'roundtrip' && (
               <div>
                 <label className={labelClass}>Data de volta</label>
-                <input type="date" className={inputClass} value={form.dataVolta} onChange={handleChange('dataVolta')} />
+                <DateField
+                  value={form.dataVolta}
+                  onChange={(v) => setForm((f) => ({ ...f, dataVolta: v }))}
+                  minDate={form.dataIda}
+                />
               </div>
             )}
             <div className="sm:col-span-2">
