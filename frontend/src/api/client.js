@@ -41,6 +41,26 @@ export async function fetchAirports(query) {
 }
 
 /**
+ * Fetch nearby airports by lat/lng
+ */
+export async function fetchNearbyAirports(lat, lng) {
+  const res = await fetch(`/api/v1/flights/nearby?lat=${lat}&lng=${lng}`);
+  const json = await res.json();
+  if (!json.success) return null;
+  return json.data;
+}
+
+/**
+ * Fetch cheapest destinations from an origin (Flight Everywhere)
+ */
+export async function fetchEverywhere(originSkyId, originEntityId) {
+  const res = await fetch(`/api/v1/flights/everywhere?originSkyId=${encodeURIComponent(originSkyId)}&originEntityId=${encodeURIComponent(originEntityId)}`);
+  const json = await res.json();
+  if (!json.success) return [];
+  return json.data;
+}
+
+/**
  * Log a search (non-blocking)
  */
 export async function logSearch(origin, destination) {

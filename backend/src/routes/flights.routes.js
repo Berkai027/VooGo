@@ -164,4 +164,67 @@ router.get('/day', async (req, res, next) => {
   }
 });
 
+// ================================================================
+// GET /api/v1/flights/nearby?lat=-23.55&lng=-46.63
+// Airports near a GPS point
+// ================================================================
+const nearbySchema = z.object({
+  lat: z.coerce.number().min(-90).max(90),
+  lng: z.coerce.number().min(-180).max(180),
+});
+
+router.get('/nearby', async (req, res, next) => {
+  try {
+    const parsed = nearbySchema.safeParse(req.query);
+    if (!parsed.success) {
+      return res.status(400).json({ success: false, message: 'Lat/Lng inválidos' });
+    }
+
+    const { lat, lng } = parsed.data;
+    const cacheKey = `nearby|${lat.toFixed(2)}|${lng.toFixed(2)}`;
+    const cached = cacheGet(cacheKey);
+    if (cached) return res.json({ success: true, data: cached, cached: true });
+
+    const data = await skyScrapper.getNearbyAirports(lat, lng);
+    cacheSet(cacheKey, data);
+
+    res.json({ success: true, data });
+  } catch (err) {
+    logger.error('Nearby airports failed:', { error: err.message });
+    next(err);
+  }
+});
+
+// ================================================================
+// GET /api/v1/flights/everywhere?originSkyId=SAOA&originEntityId=27539772
+// Cheapest destinations from an origin
+// ================================================================
+const everywhereSchema = z.object({
+  originSkyId: z.string().min(2).max(10),
+  originEntityId: z.string().min(1),
+});
+
+router.get('/everywhere', async (req, res, next) => {
+  try {
+    const parsed = everywhereSchema.safeParse(req.query);
+    if (!parsed.success) {
+      return res.status(400).json({ success: false, message: 'Parâmetros inválidos' });
+    }
+
+    const { originSkyId, originEntityId } = parsed.data;
+    const cacheKey = `everywhere|${originSkyId}|${originEntityId}`;
+    const cached = cacheGet(cacheKey);
+    if (cached) return res.json({ success: true, data: cached, cached: true });
+
+    logger.info('Fetching everywhere', { originSkyId });
+    const data = await skyScrapper.searchFlightEverywhere(originSkyId, originEntityId);
+    cacheSet(cacheKey, data);
+
+    res.json({ success: true, data });
+  } catch (err) {
+    logger.error('Everywhere search failed:', { error: err.message });
+    next(err);
+  }
+});
+
 module.exports = router;

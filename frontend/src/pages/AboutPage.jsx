@@ -64,21 +64,11 @@ export default function AboutPage() {
           <p key={i} className="text-muted leading-relaxed text-sm">{p}</p>
         ))}
 
-        <div className="pt-4 border-t border-glass-border flex flex-col sm:flex-row gap-4 items-center justify-between">
-          <div>
-            <p className="text-xs text-muted2">Dúvidas ou parcerias?</p>
-            <a href="mailto:contato@voogo.io" className="text-blue text-sm hover:underline">
-              contato@voogo.io
-            </a>
-          </div>
-          <div className="flex gap-2">
-            <span className="text-xs px-3 py-1.5 rounded-full bg-glass border border-glass-border text-muted">
-              🇧🇷 Feito no Brasil
-            </span>
-            <span className="text-xs px-3 py-1.5 rounded-full bg-glass border border-glass-border text-muted">
-              ✨ Powered by AI
-            </span>
-          </div>
+        <div className="pt-4 border-t border-glass-border">
+          <p className="text-xs text-muted2">Dúvidas ou parcerias?</p>
+          <a href="mailto:contato@voogo.io" className="text-blue text-sm hover:underline">
+            contato@voogo.io
+          </a>
         </div>
       </div>
     </div>

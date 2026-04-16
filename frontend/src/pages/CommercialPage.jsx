@@ -1,6 +1,8 @@
 import { useApp } from '@/context/AppContext';
 import ParticleCanvas from '@/components/ui/ParticleCanvas';
 import SearchBox from '@/components/ui/SearchBox';
+import NearbyAirportsCard from '@/components/ui/NearbyAirportsCard';
+import FlightEverywhereCard from '@/components/ui/FlightEverywhereCard';
 import SuggestionBanner from '@/components/ui/SuggestionBanner';
 import SummaryCards from '@/components/ui/SummaryCards';
 import Legend from '@/components/ui/Legend';
@@ -16,6 +18,21 @@ export default function CommercialPage() {
     <div className="min-h-screen">
       {/* Hero */}
       <section className="relative min-h-[480px] flex flex-col items-center justify-center px-4 py-20 overflow-hidden">
+        {/* Background video — airplane */}
+        <video
+          src="/airplane-bg.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          className="absolute inset-0 w-full h-full object-cover opacity-25"
+          aria-hidden="true"
+        />
+        {/* Gradient overlays for readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-bg/60 via-bg/30 to-bg pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-bg/30 via-transparent to-bg/30 pointer-events-none" />
+
         {/* Grid background */}
         <div
           className="absolute inset-0 opacity-10"
@@ -52,6 +69,12 @@ export default function CommercialPage() {
 
           <SearchBox />
         </div>
+      </section>
+
+      {/* Discovery cards — collapsed by default */}
+      <section className="max-w-2xl mx-auto px-4 mt-6 flex flex-col gap-3">
+        <NearbyAirportsCard />
+        <FlightEverywhereCard />
       </section>
 
       {/* Loading bar when loading */}

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { fetchConfig } from '@/api/client';
 import DateField from '@/components/ui/DateField';
+import PrivateLocationField from '@/components/ui/PrivateLocationField';
 
 const AIRCRAFT_OPTIONS = [
   { value: 'turboelice', label: 'Turboélice', icon: '🛩️', desc: 'Até 9 pax · curto alcance' },
@@ -22,7 +23,7 @@ export default function PrivatePage() {
     passageiros: 1, aeronave: 'jato_leve', observacoes: '',
   });
   const [tripType, setTripType] = useState('roundtrip'); // 'roundtrip' | 'oneway'
-  const [whatsapp, setWhatsapp] = useState('5555997044152');
+  const [whatsapp, setWhatsapp] = useState('');
 
   useEffect(() => {
     fetchConfig().then((cfg) => {
@@ -57,7 +58,7 @@ export default function PrivatePage() {
     window.open(`https://wa.me/${whatsapp}?text=${msg}`, '_blank');
   }
 
-  const isValid = form.destino && form.saida && form.dataIda;
+  const isValid = form.destino && form.saida && form.dataIda && whatsapp;
 
   return (
     <div className="min-h-screen">
@@ -70,7 +71,8 @@ export default function PrivatePage() {
           loop
           playsInline
           preload="auto"
-          className="absolute inset-0 w-full h-full object-cover opacity-35"
+          className="absolute inset-0 w-full h-full object-cover opacity-40"
+          style={{ filter: 'grayscale(100%) contrast(1.1) brightness(0.85)' }}
           aria-hidden="true"
         />
         {/* Gradient overlays */}
@@ -138,12 +140,22 @@ export default function PrivatePage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className={labelClass}>Saída</label>
-              <input className={inputClass} placeholder="Ex: São Paulo (CGH)" value={form.saida} onChange={handleChange('saida')} />
+              <PrivateLocationField
+                label="Saída"
+                icon="🛫"
+                value={form.saida}
+                onChange={(v) => setForm((f) => ({ ...f, saida: v }))}
+                placeholder="Ex: São Paulo, Rio de Janeiro…"
+              />
             </div>
             <div>
-              <label className={labelClass}>Destino</label>
-              <input className={inputClass} placeholder="Ex: Angra dos Reis (AIA)" value={form.destino} onChange={handleChange('destino')} />
+              <PrivateLocationField
+                label="Destino"
+                icon="📍"
+                value={form.destino}
+                onChange={(v) => setForm((f) => ({ ...f, destino: v }))}
+                placeholder="Ex: Angra dos Reis, Trancoso…"
+              />
             </div>
             <div className={tripType === 'oneway' ? 'sm:col-span-2' : ''}>
               <label className={labelClass}>

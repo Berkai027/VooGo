@@ -104,7 +104,8 @@ export default function DetailPanel() {
   const dateFmt = `${String(selectedDay).padStart(2, '0')}/${String(month).padStart(2, '0')}/${year}`;
 
   function handleWhatsAppBuy() {
-    const phone = whatsappNumber || '5599999999999';
+    if (!whatsappNumber) return;
+    const phone = whatsappNumber;
     const searchId = `VG-${year}${String(month).padStart(2, '0')}${String(selectedDay).padStart(2, '0')}-${originCode}${destCode}-${Date.now().toString().slice(-5)}`;
 
     const message = `Olá! Quero comprar uma passagem pela VooGo 🛫

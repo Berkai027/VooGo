@@ -118,6 +118,106 @@ const skyScrapper = {
     });
   },
 
+  // Brazilian airport IATA → state mapping (for enrichment)
+  _brStates: {
+    GRU:'SP',CGH:'SP',VCP:'SP',SDU:'RJ',GIG:'RJ',BSB:'DF',CNF:'MG',PLU:'MG',
+    CWB:'PR',IGU:'PR',LDB:'PR',MGF:'PR',POA:'RS',CXJ:'RS',PET:'RS',FLN:'SC',
+    NVT:'SC',JOI:'SC',JJG:'SC',EEA:'SC',CCM:'SC',SSA:'BA',BPS:'BA',IOS:'BA',
+    REC:'PE',FEN:'PE',FOR:'CE',JDO:'CE',NAT:'RN',MCZ:'AL',AJU:'SE',SLZ:'MA',
+    THE:'PI',BEL:'PA',MAO:'AM',MCP:'AP',PVH:'RO',RBR:'AC',BVB:'RR',PMW:'TO',
+    GYN:'GO',CGB:'MT',CGR:'MS',BYO:'MS',VIX:'ES',JPA:'PB',SJP:'SP',SJK:'SP',
+    RAO:'SP',BAU:'SP',PPB:'SP',UDI:'MG',MOC:'MG',CFB:'RJ',QDV:'RJ',AQA:'SP',
+    JDF:'MG',IPN:'MG',CPV:'PB',PNZ:'PE',STM:'PA',IMP:'MA',CZS:'AC',TFF:'AM',
+  },
+
+  /**
+   * Get nearby airports for a lat/lng point
+   * Endpoint: /api/v1/flights/getNearByAirports
+   */
+  async getNearbyAirports(lat, lng) {
+    const data = await this.fetch('/api/v1/flights/getNearByAirports', {
+      lat,
+      lng,
+      locale: 'pt-BR',
+    });
+
+    const current = data?.data?.current;
+    const nearby = Array.isArray(data?.data?.nearby) ? data.data.nearby : [];
+
+    return {
+      current: current
+        ? {
+            skyId: current.navigation?.relevantFlightParams?.skyId || current.skyId || '',
+            entityId: current.entityId || '',
+            name: current.presentation?.title || '',
+            suggestionTitle: current.presentation?.suggestionTitle || '',
+            subtitle: current.presentation?.subtitle || '',
+          }
+        : null,
+      nearby: nearby.map((n) => {
+        const fp = n.navigation?.relevantFlightParams || {};
+        const hp = n.navigation?.relevantHotelParams || {};
+        const skyId = fp.skyId || '';
+        const airportName = fp.localizedName || n.presentation?.title || '';
+        const city = hp.localizedName || '';
+        const country = n.presentation?.subtitle || 'Brasil';
+        const state = this._brStates[skyId] || '';
+        const mapQuery = encodeURIComponent(`Aeroporto ${airportName} ${skyId} ${city} ${state} ${country}`);
+        return {
+          skyId,
+          entityId: n.navigation?.entityId || '',
+          airportName,
+          city,
+          state,
+          country,
+          suggestionTitle: n.presentation?.suggestionTitle || '',
+          type: n.navigation?.entityType || 'AIRPORT',
+          mapUrl: `https://www.google.com/maps/search/?api=1&query=${mapQuery}`,
+        };
+      }),
+    };
+  },
+
+  /**
+   * Search flights "everywhere" — cheapest destinations from an origin
+   * Endpoint: /api/v2/flights/searchFlightEverywhere
+   */
+  async searchFlightEverywhere(originSkyId, originEntityId) {
+    const data = await this.fetch('/api/v2/flights/searchFlightEverywhere', {
+      originSkyId,
+      originEntityId,
+      cabinClass: 'economy',
+      journeyType: 'one_way',
+      currency: 'BRL',
+      market: 'pt-BR',
+      countryCode: 'BR',
+    });
+
+    const results = Array.isArray(data?.data?.results) ? data.data.results : [];
+
+    return results
+      .filter((r) => r.type === 'LOCATION' || r.type === 'PLACE')
+      .map((r) => {
+        const loc = r.content?.location || {};
+        const quotes = r.content?.flightQuotes || {};
+        const cheapest = quotes.cheapest || quotes.direct || {};
+        return {
+          id: loc.id || r.id,
+          name: loc.name || '',
+          type: loc.type || '', // Nation, City, Airport
+          skyCode: loc.skyCode || '',
+          continent: loc.continent?.name || '',
+          price: cheapest.rawPrice ?? null,
+          priceFormatted: cheapest.price || '',
+          direct: !!cheapest.direct,
+          image: r.content?.image?.url || '',
+        };
+      })
+      .filter((r) => r.price != null)
+      .sort((a, b) => a.price - b.price)
+      .slice(0, 18);
+  },
+
   /**
    * Search airports by query
    * Endpoint: /api/v1/flights/searchAirport
