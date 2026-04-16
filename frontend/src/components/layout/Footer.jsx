@@ -11,7 +11,7 @@ export default function Footer({ onOpenLegal }) {
         </div>
 
         {/* Links */}
-        <div className="flex items-center gap-6 text-sm text-muted">
+        <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-6 text-sm text-muted">
           <button
             onClick={() => onOpenLegal?.('termos')}
             className="hover:text-text transition-colors"
@@ -34,7 +34,7 @@ export default function Footer({ onOpenLegal }) {
 
         {/* Copyright */}
         <p className="text-xs text-muted2">
-          © 2026 VooGo. Todos os direitos reservados.
+          © {new Date().getFullYear()} VooGo. Todos os direitos reservados.
         </p>
       </div>
     </footer>

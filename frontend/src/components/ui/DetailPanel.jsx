@@ -163,9 +163,9 @@ Pode me ajudar a finalizar a reserva?`;
       </div>
 
       {/* Price card (always visible, destaque) */}
-      <div className={`glass border-2 ${colors.border} rounded-2xl p-6 mb-4 shadow-lg ${colors.glow}`}>
+      <div className={`glass border-2 ${colors.border} rounded-2xl p-4 sm:p-6 mb-4 shadow-lg ${colors.glow}`}>
         <p className="text-xs text-muted uppercase tracking-wider mb-2">Menor preço encontrado</p>
-        <p className={`font-brico font-bold text-5xl ${colors.text} leading-none tabular-nums`}>
+        <p className={`font-brico font-bold text-4xl sm:text-5xl ${colors.text} leading-none tabular-nums`}>
           R$ {formatPrice(basePrice)}
         </p>
         <div className="flex flex-wrap items-center gap-2 mt-3">

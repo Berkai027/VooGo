@@ -14,14 +14,14 @@ function Card({ label, value, sub, color, icon, delay = 0 }) {
 
   return (
     <div
-      className={`glass border rounded-2xl p-4 flex flex-col gap-1 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${colorMap[color]}`}
+      className={`glass border rounded-2xl p-3 sm:p-4 flex flex-col gap-1 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${colorMap[color]}`}
       style={{ animationDelay: `${delay}ms` }}
     >
       <div className="flex items-center gap-2 text-sm font-medium opacity-80">
         <span aria-hidden="true">{icon}</span>
         <span>{label}</span>
       </div>
-      <p className="text-2xl font-brico font-bold mt-1 tabular-nums">
+      <p className="text-xl sm:text-2xl font-brico font-bold mt-1 tabular-nums">
         {value != null ? `R$ ${formatPrice(Math.round(animatedValue))}` : '—'}
       </p>
       {sub && <p className="text-xs opacity-60 mt-0.5">{sub}</p>}

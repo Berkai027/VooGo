@@ -92,7 +92,7 @@ export default function CommercialPage() {
           <SuggestionBanner />
           <SummaryCards />
 
-          <div className="glass border border-glass-border rounded-2xl p-6 flex flex-col gap-5">
+          <div className="glass border border-glass-border rounded-2xl p-3 sm:p-6 flex flex-col gap-5">
             <MonthNav />
             <Legend />
             <CalendarGrid />

@@ -80,14 +80,14 @@ export default function PrivatePage() {
         <div className="absolute inset-0 bg-gradient-to-r from-bg/30 via-transparent to-bg/30" />
 
         {/* Glow accent */}
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-green/10 rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[90vw] sm:w-[600px] h-[300px] bg-green/10 rounded-full blur-[100px] pointer-events-none" />
 
         <div className="relative z-10 text-center px-4 max-w-2xl">
           <span className="inline-flex items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-full bg-green/10 border border-green/30 text-green tracking-wider uppercase shadow-lg shadow-green/10">
             <span className="w-1.5 h-1.5 rounded-full bg-green animate-pulse" />
             Voos Privados
           </span>
-          <h1 className="mt-5 text-4xl sm:text-6xl font-brico font-bold text-text leading-tight">
+          <h1 className="mt-5 text-3xl sm:text-5xl md:text-6xl font-brico font-bold text-text leading-tight">
             Voe no seu{' '}
             <span className="bg-gradient-to-r from-green via-green/80 to-green/50 bg-clip-text text-transparent">
               tempo
@@ -100,8 +100,8 @@ export default function PrivatePage() {
       </section>
 
       {/* Form */}
-      <section className="max-w-2xl mx-auto px-4 py-10 -mt-16 relative z-20">
-        <div className="glass border border-green/20 rounded-2xl p-6 shadow-2xl shadow-green/5 flex flex-col gap-4">
+      <section className="max-w-2xl mx-auto px-4 py-6 sm:py-10 -mt-8 sm:-mt-16 relative z-20">
+        <div className="glass border border-green/20 rounded-2xl p-4 sm:p-6 shadow-2xl shadow-green/5 flex flex-col gap-4">
           <div className="flex items-center gap-2 mb-1">
             <span className="text-green text-xl" aria-hidden="true">🛩️</span>
             <h2 className="font-brico font-bold text-xl text-text">Solicitar voo privado</h2>

@@ -1,13 +1,15 @@
 {
   "name": "VooGo",
   "short_name": "VooGo",
-  "description": "Calendário visual de preços de voos com agente IA",
+  "description": "Calendário visual de preços de voos",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#060A12",
   "theme_color": "#3D7EFF",
+  "lang": "pt-BR",
+  "orientation": "portrait-primary",
   "icons": [
-    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
   ]
 }

@@ -22,6 +22,8 @@
 
 @layer base {
   html { scroll-behavior: smooth; }
+  /* Prevent horizontal scroll caused by glows/shadows on mobile */
+  html, body { overflow-x: hidden; max-width: 100%; }
   body {
     font-family: var(--font-geist);
     -webkit-font-smoothing: antialiased;

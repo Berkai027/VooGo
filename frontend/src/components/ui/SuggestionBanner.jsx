@@ -14,31 +14,33 @@ export default function SuggestionBanner() {
   }
 
   return (
-    <div className="w-full glass border border-blue/30 bg-blue/5 rounded-2xl px-5 py-4 flex items-center gap-4 animate-fadeInUp">
-      <span className="text-2xl shrink-0" aria-hidden="true">💡</span>
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-text">
-          Melhor dia para voar:{' '}
-          <span className="text-blue font-bold">dia {best_day}</span>
-          {best_airline && (
-            <> com a <span className="font-semibold">{best_airline}</span></>
-          )}
-          {economy_pct != null && (
-            <> — economize até{' '}
-              <span className="text-green font-bold">{economy_pct}%</span>
-            </>
-          )}
-        </p>
-        {best_price != null && (
-          <p className="text-xs text-muted mt-0.5">
-            A partir de <span className="text-text font-medium">R$ {formatPrice(best_price)}</span>
+    <div className="w-full glass border border-blue/30 bg-blue/5 rounded-2xl px-4 sm:px-5 py-4 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 animate-fadeInUp">
+      <div className="flex items-start gap-3 sm:gap-4 min-w-0 w-full">
+        <span className="text-2xl shrink-0" aria-hidden="true">💡</span>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-medium text-text">
+            Melhor dia para voar:{' '}
+            <span className="text-blue font-bold">dia {best_day}</span>
+            {best_airline && (
+              <> com a <span className="font-semibold">{best_airline}</span></>
+            )}
+            {economy_pct != null && (
+              <> — economize até{' '}
+                <span className="text-green font-bold">{economy_pct}%</span>
+              </>
+            )}
           </p>
-        )}
+          {best_price != null && (
+            <p className="text-xs text-muted mt-0.5">
+              A partir de <span className="text-text font-medium">R$ {formatPrice(best_price)}</span>
+            </p>
+          )}
+        </div>
       </div>
       <button
         onClick={handleView}
         disabled={loading}
-        className="shrink-0 px-4 py-2 rounded-xl bg-blue text-white text-sm font-medium hover:bg-blue/90 disabled:opacity-50 transition-all"
+        className="w-full sm:w-auto shrink-0 px-4 py-2 rounded-xl bg-blue text-white text-sm font-medium hover:bg-blue/90 disabled:opacity-50 transition-all"
       >
         Ver detalhes →
       </button>

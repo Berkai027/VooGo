@@ -11,6 +11,3 @@ uploads/
 coverage/
 .vscode/
 *.pem
-
-# Large video files (compress before committing)
-*.mp4

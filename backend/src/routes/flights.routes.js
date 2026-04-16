@@ -1,59 +1,26 @@
 const express = require('express');
 const { z } = require('zod');
+const { LRUCache } = require('lru-cache');
 const { skyScrapper } = require('../services/flightApi');
 const logger = require('../config/logger');
 
 const router = express.Router();
 
 // ================================================================
-// In-memory cache (TTL 1h) — avoid burning API quota
+// LRU cache — avoid burning API quota, capped at 500 entries, 1h TTL
 // ================================================================
-const cache = new Map();
-const CACHE_TTL = 60 * 60 * 1000; // 1 hour
+const cache = new LRUCache({
+  max: 500,
+  ttl: 60 * 60 * 1000, // 1 hour
+});
 
 function cacheGet(key) {
-  const entry = cache.get(key);
-  if (!entry) return null;
-  if (Date.now() > entry.expires) {
-    cache.delete(key);
-    return null;
-  }
-  return entry.data;
+  return cache.get(key) || null;
 }
 
 function cacheSet(key, data) {
-  cache.set(key, { data, expires: Date.now() + CACHE_TTL });
+  cache.set(key, data);
 }
-
-// ================================================================
-// GET /api/v1/flights/airports?q=term
-// Search airports for autocomplete
-// ================================================================
-const airportSchema = z.object({
-  q: z.string().min(2).max(100),
-});
-
-router.get('/airports', async (req, res, next) => {
-  try {
-    const parsed = airportSchema.safeParse(req.query);
-    if (!parsed.success) {
-      return res.status(400).json({ success: false, message: 'Query inválida' });
-    }
-
-    const { q } = parsed.data;
-    const cacheKey = `airports|${q.toLowerCase()}`;
-    const cached = cacheGet(cacheKey);
-    if (cached) return res.json({ success: true, data: cached, cached: true });
-
-    const results = await skyScrapper.searchAirport(q);
-    cacheSet(cacheKey, results);
-
-    res.json({ success: true, data: results });
-  } catch (err) {
-    logger.error('Airport search failed:', { error: err.message });
-    next(err);
-  }
-});
 
 // ================================================================
 // GET /api/v1/flights/calendar?originSkyId=GRU&destSkyId=LIS&year=2026&month=5

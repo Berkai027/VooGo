@@ -99,7 +99,7 @@ export default function CalendarGrid() {
               <p className={`text-[10px] font-bold mt-0.5 leading-tight ${TIER_TEXT[tier]}`}>
                 R${formatPrice(entry.price)}
               </p>
-              <p className={`text-[9px] mt-0.5 opacity-70 ${TIER_TEXT[tier]}`}>
+              <p className={`hidden sm:block text-[9px] mt-0.5 opacity-70 ${TIER_TEXT[tier]}`}>
                 {tierLabel(tier)}
               </p>
             </button>

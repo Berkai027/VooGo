@@ -21,6 +21,9 @@ export default function ParticleCanvas({ className = '' }) {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+
+    // Respect prefers-reduced-motion — draw a single static frame, no animation
+    const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
     const ctx = canvas.getContext('2d');
 
     let w = canvas.offsetWidth;
@@ -71,13 +74,15 @@ export default function ParticleCanvas({ className = '' }) {
         }
       }
 
-      rafId = requestAnimationFrame(draw);
+      if (!prefersReducedMotion) {
+        rafId = requestAnimationFrame(draw);
+      }
     }
 
     draw();
     window.addEventListener('resize', resize);
     return () => {
-      cancelAnimationFrame(rafId);
+      if (rafId) cancelAnimationFrame(rafId);
       window.removeEventListener('resize', resize);
     };
   }, []);

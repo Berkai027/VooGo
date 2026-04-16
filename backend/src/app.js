@@ -9,19 +9,31 @@ const { errorHandler, notFound } = require('./middlewares/errorHandler');
 const app = express();
 
 // ── SECURITY ──
-app.use(helmet());
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: 'cross-origin' },
+  contentSecurityPolicy: env.NODE_ENV === 'production' ? undefined : false,
+}));
 app.use(cors({
   origin: env.CORS_ORIGINS.split(',').map(s => s.trim()),
   credentials: true,
 }));
 
 // ── RATE LIMITING ──
-app.use('/api/', rateLimit({
+// General rate limit for write/search endpoints (burns API quota)
+app.use('/api/v1/flights', rateLimit({
   windowMs: env.RATE_LIMIT_WINDOW_MS,
   max: env.RATE_LIMIT_MAX,
   standardHeaders: true,
   legacyHeaders: false,
-  message: { success: false, message: 'Too many requests. Try again later.' },
+  message: { success: false, message: 'Muitas requisições. Aguarde e tente de novo.' },
+}));
+// Lighter rate limit for config/log (cheap, no external API)
+app.use('/api/', rateLimit({
+  windowMs: 60 * 1000,
+  max: 300,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, message: 'Muitas requisições. Aguarde e tente de novo.' },
 }));
 
 // ── PARSERS ──

@@ -31,16 +31,6 @@ export async function fetchFlightsDay(originSkyId, destSkyId, originEntityId, de
 }
 
 /**
- * Search airports by query
- */
-export async function fetchAirports(query) {
-  const res = await fetch(`/api/v1/flights/airports?q=${encodeURIComponent(query)}`);
-  const json = await res.json();
-  if (!json.success) return [];
-  return json.data;
-}
-
-/**
  * Fetch nearby airports by lat/lng
  */
 export async function fetchNearbyAirports(lat, lng) {

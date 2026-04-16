@@ -154,7 +154,7 @@ export default function NearbyAirportsCard() {
                       <button
                         type="button"
                         onClick={() => selectAirport(airport)}
-                        className="shrink-0 text-xs text-blue font-medium hover:text-blue/80 transition-colors px-2 py-1"
+                        className="shrink-0 text-xs text-blue font-medium hover:text-blue/80 transition-colors px-3 py-2 rounded-lg hover:bg-blue/5"
                       >
                         Usar →
                       </button>

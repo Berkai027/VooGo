@@ -67,7 +67,7 @@ export default function SearchBox() {
   const canSearch = !loading && (destAirport || matchAirport(dest)) && (originAirport || matchAirport(origin));
 
   return (
-    <div className="glass border border-glass-border rounded-2xl p-6 shadow-xl w-full max-w-2xl mx-auto">
+    <div className="glass border border-glass-border rounded-2xl p-4 sm:p-6 shadow-xl w-full max-w-2xl mx-auto">
       <div className="flex flex-col gap-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <AirportAutocomplete

@@ -31,7 +31,7 @@
 
     <!-- PWA -->
     <link rel="manifest" href="/manifest.json" />
-    <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
@@ -41,12 +41,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
     <!-- Google Analytics 4 -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-S0RLLVY1DC"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=%VITE_GA_ID%"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-S0RLLVY1DC');
+      gtag('config', '%VITE_GA_ID%');
     </script>
 
     <!-- Structured Data -->

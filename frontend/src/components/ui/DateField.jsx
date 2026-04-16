@@ -134,7 +134,7 @@ export default function DateField({ value, onChange, placeholder = 'dd/mm/aaaa',
       </button>
 
       {open && (
-        <div className="absolute z-50 mt-2 left-0 w-full min-w-[300px] bg-s2/95 backdrop-blur-xl border border-glass-border rounded-2xl p-4 shadow-2xl shadow-black/60 animate-fadeInUp">
+        <div className="absolute z-50 mt-2 left-0 right-0 w-full bg-s2/95 backdrop-blur-xl border border-glass-border rounded-2xl p-3 sm:p-4 shadow-2xl shadow-black/60 animate-fadeInUp">
           {/* Header */}
           <div className="flex items-center justify-between mb-4">
             <button
@@ -181,7 +181,7 @@ export default function DateField({ value, onChange, placeholder = 'dd/mm/aaaa',
                   disabled={dis}
                   onClick={() => selectDay(day)}
                   className={[
-                    'h-9 w-9 rounded-lg text-sm font-medium transition-all',
+                    'h-10 w-full sm:h-9 rounded-lg text-sm font-medium transition-all',
                     dis && 'text-muted/30 cursor-not-allowed',
                     !dis && !sel && !td && 'text-text ' + s.hover,
                     !dis && !sel && td && s.today + ' ' + s.hover,
