@@ -55,7 +55,7 @@ export default function PrivatePage() {
 
   function handleWhatsApp() {
     const msg = buildMessage();
-    window.open(`https://wa.me/${whatsapp}?text=${msg}`, '_blank');
+    window.open(`https://wa.me/${whatsapp}?text=${msg}`, '_blank', 'noopener,noreferrer');
   }
 
   const isValid = form.destino && form.saida && form.dataIda && whatsapp;
